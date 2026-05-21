@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Matrix Visualizer Test</title>
+    <style>
+        body {
+            margin: 0;
+            background: #141820;
+            color: #fff;
+            font-family: "Courier New", monospace;
+            padding: 20px;
+        }
+        canvas {
+            border: 2px solid #4a9eff;
+            background: #1a1f28;
+            display: block;
+            width: 800px;
+            height: 600px;
+        }
+        .info {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #aaa;
+        }
+        .info p {
+            margin: 5px 0;
+        }
+        .slider {
+            margin: 20px 0;
+        }
+        input[type="range"] {
+            width: 300px;
+        }
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Matrix Visualizer - Standalone Test</h2>
+    
+    <div class="slider">
+        <label>Matrix A[0][0]:</label>
+        <input type="number" id="a00" value="1" step="0.1" />
+    </div>
+    <div class="slider">
+        <label>Matrix A[0][1]:</label>
+        <input type="number" id="a01" value="1" step="0.1" />
+    </div>
+    <div class="slider">
+        <label>Matrix A[1][0]:</label>
+        <input type="number" id="a10" value="0" step="0.1" />
+    </div>
+    <div class="slider">
+        <label>Matrix A[1][1]:</label>
+        <input type="number" id="a11" value="1" step="0.1" />
+    </div>
+    
+    <div class="slider">
+        <label>Time (t):</label>
+        <input type="range" id="t-slider" min="0" max="10" step="0.01" value="5" />
+        <span id="t-value">0.50</span>
+    </div>
+    
+    <div class="slider">
+        <label>Scale:</label>
+        <input type="range" id="scale-slider" min="0.1" max="3" step="0.1" value="1" />
+        <span id="scale-value">1.00</span>
+    </div>
+    
+    <div class="slider">
+        <input type="checkbox" id="show-basis" checked />
+        <label for="show-basis">Show Basis Vectors</label>
+    </div>
+    <div class="slider">
+        <input type="checkbox" id="show-grid" checked />
+        <label for="show-grid">Show Grid</label>
+    </div>
+    
+    <canvas id="canvas" width="800" height="600"></canvas>
+    
+    <div class="info">
+        <p><strong>Test Matrix: [[a00, a01], [a10, a11]]</strong></p>
+        <p id="matrix-info"></p>
+        <p id="vector-info"></p>
+        <p><strong>Expected for [[1,1],[0,1]]:</strong></p>
+        <p>• At t=1.0: j-vector at 45°, length √2 ≈ 1.414</p>
+        <p>• At t=0.5: j-vector at ~63.4°, length √1.25 ≈ 1.118</p>
+    </div>
+    
+    <script src="main.js"></script>
+    <script>
+        // Initialize app
+        const app = new MatrixApp();
+        
+        // Override matrix A with test inputs
+        document.getElementById('a00').addEventListener('change', update);
+        document.getElementById('a01').addEventListener('change', update);
+        document.getElementById('a10').addEventListener('change', update);
+        document.getElementById('a11').addEventListener('change', update);
+        
+        document.getElementById('t-slider').addEventListener('input', (e) => {
+            const t = parseFloat(e.target.value) / 10;  // Convert to 0-1 range
+            app.t = t;
+            document.getElementById('t-value').textContent = t.toFixed(2);
+            app.render();
+            updateInfo();
+        });
+        
+        document.getElementById('scale-slider').addEventListener('input', (e) => {
+            app.scale = parseFloat(e.target.value);
+            document.getElementById('scale-value').textContent = app.scale.toFixed(2);
+            app.render();
+        });
+        
+        document.getElementById('show-basis').addEventListener('change', (e) => {
+            app.showBasis = e.target.checked;
+            app.render();
+        });
+        
+        document.getElementById('show-grid').addEventListener('change', (e) => {
+            app.showGrid = e.target.checked;
+            app.render();
+        });
+        
+        function update() {
+            const matrix = [
+                [
+                    parseFloat(document.getElementById('a00').value),
+                    parseFloat(document.getElementById('a01').value)
+                ],
+                [
+                    parseFloat(document.getElementById('a10').value),
+                    parseFloat(document.getElementById('a11').value)
+                ]
+            ];
+            app.matrices.set('A', matrix);
+            app.render();
+            updateInfo();
+        }
+        
+        function updateInfo() {
+            const matrix = app.matrices.get('A');
+            const t = app.t;
+            
+            // Compute interpolated matrix
+            const identity = [[1, 0], [0, 1]];
+            const Mt = app.lerpMatrix(identity, matrix, t);
+            
+            // Compute basis vectors
+            const i_vec = app.matVecMult(Mt, [1, 0]);
+            const j_vec = app.matVecMult(Mt, [0, 1]);
+            
+            const angle = Math.atan2(j_vec[1], j_vec[0]) * 180 / Math.PI;
+            const length = Math.sqrt(j_vec[0] * j_vec[0] + j_vec[1] * j_vec[1]);
+            
+            document.getElementById('matrix-info').textContent = 
+                `Mt = [[${Mt[0][0].toFixed(2)}, ${Mt[0][1].toFixed(2)}], [${Mt[1][0].toFixed(2)}, ${Mt[1][1].toFixed(2)}]]`;
+            
+            document.getElementById('vector-info').textContent = 
+                `i=(${i_vec[0].toFixed(2)}, ${i_vec[1].toFixed(2)}), j=(${j_vec[0].toFixed(2)}, ${j_vec[1].toFixed(2)}) | j-angle: ${angle.toFixed(1)}°, j-length: ${length.toFixed(3)}`;
+        }
+        
+        updateInfo();
+    </script>
+</body>
+</html>
