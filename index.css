@@ -1,0 +1,467 @@
+
+
+:root {
+    --bg: #0a0e17;
+    --panel: #141820;
+    --accent: #4a9eff;
+    --accent2: #ff4080;
+    --text: #f0f2f5;
+    --subtext: #8a92a8;
+    --grid-col: #1f2633;
+    --entry-bg: #1a1f2e;
+    --border: #2a3040;
+    --i-color: #ff5555;
+    --j-color: #55ffaa;
+    --k-color: #ffdd33;
+}
+
+body.light-mode {
+    --bg: #f5f5f5;
+    --panel: #ffffff;
+    --accent: #0066ff;
+    --accent2: #ff0066;
+    --text: #1a1a1a;
+    --subtext: #666666;
+    --grid-col: #e8e8e8;
+    --entry-bg: #f0f0f0;
+    --border: #cccccc;
+    --i-color: #cc0000;
+    --j-color: #00aa00;
+    --k-color: #aa8800;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: "Courier New", monospace;
+    overflow: hidden;
+    height: 100vh;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+
+
+.canvas-container {
+    flex: 1;
+    background-color: var(--panel);
+    position: relative;
+    overflow: hidden;
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.reset-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: var(--accent2);
+    color: var(--bg);
+    border: none;
+    padding: 8px 14px;
+    border-radius: 4px;
+    font-family: "Courier New", monospace;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 12px;
+    z-index: 10;
+    transition: background-color 0.2s;
+}
+
+.reset-btn:hover {
+    background-color: var(--accent);
+    color: var(--text);
+}
+
+ 
+/*  SIDEBAR */
+ 
+
+.sidebar {
+    width: 450px;
+    background-color: var(--panel);
+    border-left: 2px solid var(--border);
+    overflow-y: auto;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.section-title {
+    color: var(--accent);
+    font-size: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 6px 0 4px 0;
+}
+
+.separator {
+    height: 1px;
+    background-color: var(--border);
+    margin: 4px 0;
+}
+
+ 
+/*  MODE SELECTOR */
+ 
+
+.mode-buttons {
+    display: flex;
+    gap: 4px;
+}
+
+.mode-btn {
+    flex: 1;
+    background-color: var(--entry-bg);
+    color: var(--subtext);
+    border: 1px solid var(--border);
+    padding: 6px 8px;
+    font-family: "Courier New", monospace;
+    font-size: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: all 0.2s;
+}
+
+.mode-btn:hover {
+    border-color: var(--accent);
+}
+
+.mode-btn.active {
+    background-color: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+}
+
+ 
+/*  SLIDERS */
+ 
+
+.slider-group {
+    margin: 6px 0;
+}
+
+.slider-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    color: var(--subtext);
+    margin-bottom: 3px;
+}
+
+input[type="range"] {
+    width: 100%;
+    height: 4px;
+    background: var(--entry-bg);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    background: var(--accent);
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    background: var(--accent);
+    cursor: pointer;
+    border-radius: 50%;
+    border: none;
+}
+
+ 
+/*  MATRICES CONTAINER */
+ 
+
+.matrices-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.matrices-buttons {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 6px;
+}
+
+.btn {
+    flex: 1;
+    background-color: var(--accent);
+    color: var(--bg);
+    border: none;
+    padding: 6px 10px;
+    font-family: "Courier New", monospace;
+    font-size: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: background-color 0.2s;
+}
+
+.btn:hover {
+    background-color: var(--accent2);
+}
+
+.btn-secondary {
+    background-color: var(--entry-bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    flex: 0.5;
+}
+
+.btn-secondary:hover {
+    border-color: var(--accent);
+}
+
+.matrices-container {
+    flex: 1;
+    overflow-y: auto;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    background-color: var(--entry-bg);
+    padding: 6px;
+}
+
+.matrix-item {
+    background-color: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 6px;
+    margin-bottom: 6px;
+}
+
+.matrix-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.matrix-name {
+    color: var(--accent2);
+    font-size: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    flex: 1;
+}
+
+.matrix-name:hover {
+    text-decoration: underline;
+}
+
+.matrix-delete {
+    background-color: var(--accent2);
+    color: var(--bg);
+    border: none;
+    padding: 2px 5px;
+    font-size: 9px;
+    cursor: pointer;
+    border-radius: 2px;
+}
+
+.matrix-delete:hover {
+    background-color: #ff2d60;
+}
+
+.matrix-grid {
+    display: grid;
+    gap: 2px;
+}
+
+.matrix-input {
+    background-color: var(--entry-bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 4px;
+    font-family: "Courier New", monospace;
+    font-size: 9px;
+    border-radius: 2px;
+    text-align: center;
+    width: 40px;
+}
+
+.matrix-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    background-color: var(--panel);
+}
+
+ 
+/*  OPERATIONS */
+ 
+
+.operations-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+}
+
+.operation-btn {
+    background-color: var(--entry-bg);
+    color: var(--subtext);
+    border: 1px solid var(--border);
+    padding: 5px 4px;
+    font-family: "Courier New", monospace;
+    font-size: 9px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.2s;
+}
+
+.operation-btn:hover {
+    border-color: var(--accent);
+}
+
+.operation-btn.active {
+    background-color: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+}
+
+ 
+/*  FORMULA & RESULT */
+ 
+
+.formula-input {
+    width: 100%;
+    background-color: var(--entry-bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 6px;
+    font-family: "Courier New", monospace;
+    font-size: 10px;
+    border-radius: 3px;
+}
+
+.formula-input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.formula-preview {
+    background-color: var(--entry-bg);
+    color: var(--accent2);
+    border: 1px solid var(--border);
+    padding: 5px;
+    font-size: 8px;
+    border-radius: 3px;
+    min-height: 24px;
+    max-height: 50px;
+    overflow-y: auto;
+    word-wrap: break-word;
+}
+
+.result-display {
+    background-color: var(--entry-bg);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 6px;
+    max-height: 120px;
+    overflow-y: auto;
+}
+
+.result-grid {
+    display: grid;
+    gap: 1px;
+    margin-bottom: 4px;
+}
+
+.result-cell {
+    background-color: var(--panel);
+    border: 1px solid var(--grid-col);
+    padding: 3px;
+    text-align: center;
+    font-size: 8px;
+    border-radius: 2px;
+}
+
+.result-header {
+    color: var(--accent2);
+    font-size: 9px;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+ 
+/*  CHECKBOX */
+ 
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+    accent-color: var(--accent);
+}
+
+body.light-mode input[type="checkbox"] {
+    accent-color: var(--accent);
+}
+
+.checkbox-label {
+    font-size: 10px;
+    color: var(--text);
+    cursor: pointer;
+}
+
+
+.matrices-container::-webkit-scrollbar,
+.result-display::-webkit-scrollbar,
+.formula-preview::-webkit-scrollbar,
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.matrices-container::-webkit-scrollbar-track,
+.result-display::-webkit-scrollbar-track,
+.formula-preview::-webkit-scrollbar-track,
+.sidebar::-webkit-scrollbar-track {
+    background: var(--entry-bg);
+}
+
+.matrices-container::-webkit-scrollbar-thumb,
+.result-display::-webkit-scrollbar-thumb,
+.formula-preview::-webkit-scrollbar-thumb,
+.sidebar::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 3px;
+}
+
+.matrices-container::-webkit-scrollbar-thumb:hover,
+.result-display::-webkit-scrollbar-thumb:hover,
+.formula-preview::-webkit-scrollbar-thumb:hover,
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: var(--subtext);
+}
